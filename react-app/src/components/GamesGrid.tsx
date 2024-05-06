@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 const GamesGrid = () => {
-  const [games, setGames] = useState<any[]>([]);
+  const [games, setGames] = useState<Game[]>([]);
 
   const getGames = () => {
     const search = { Name: "Pokemon", ReleasedDate: "2004" };
@@ -10,7 +10,6 @@ const GamesGrid = () => {
     axios
       .post("https://localhost:7281/api/Game/SearchGames", search)
       .then((response) => {
-        console.log(response);
         setGames(response.data);
       })
       .catch((error) => {
@@ -27,22 +26,22 @@ const GamesGrid = () => {
       <table className="table table-secondary">
         <thead>
           <tr>
-            <th scope="col">Id</th>
             <th scope="col">Name</th>
-            <th scope="col">Japanese Name</th>
             <th scope="col">Release Year</th>
+            <th scope="col">Developers</th>
           </tr>
         </thead>
         <tbody>
           {games.length
             ? games.map((game) => (
                 <tr key={game.id}>
-                  <th scope="row" font-color="red">
-                    {game.id}
-                  </th>
-                  <td>{game.names.international}</td>
-                  <td>{game.names.japanese}</td>
-                  <td>{game.released}</td>
+                  <td>{game.name}</td>
+                  <td>{game.yearReleased}</td>
+                  <td>
+                    {game.developers
+                      .map((developer) => developer.name)
+                      .join(", ")}
+                  </td>
                 </tr>
               ))
             : null}
